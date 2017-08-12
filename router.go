@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"raspberry-server/receiver"
+	"raspberry-server/pull"
 )
 
 
@@ -14,4 +15,5 @@ func RegisterRouters()  {
 	})
 
 	router.POST("receive", receiver.Receiver{}.Receive)
+	router.GET("tasklist", pull.Pull{}.TaskList)
 }
