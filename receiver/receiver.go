@@ -5,6 +5,11 @@ import (
 	"net/http"
 	"raspberry-server/controller"
 	"raspberry-server/task"
+	"crypto/sha256"
+	"time"
+	"encoding/hex"
+	"strconv"
+	"fmt"
 )
 
 type Receiver struct {
@@ -20,10 +25,15 @@ func (this Receiver) Receive(context *gin.Context) {
 		context.JSON(http.StatusOK, data)
 		return
 	}
+	h := sha256.New()
+	str := taskName + strconv.FormatInt(time.Now().UnixNano(), 10)
+	h.Write([]byte(str))
+	taskId := hex.EncodeToString(h.Sum(nil))
 	t := task.Task{
 		TaskName:   taskName,
 		TaskType:   taskType,
 		TaskDetail: TaskDetail,
+		TaskId:     taskId,
 	}
 	//todo flush to disk
 	err = task.TaskAdd(&t)
@@ -36,17 +46,18 @@ func (this Receiver) Receive(context *gin.Context) {
 
 //todo dependent disk data
 func (this Receiver) Confirm(context *gin.Context) {
-	taskLength, err := this.GetIntParam(context, "length") //todo 增加回调校验的参数
+	tasklist, err := this.GetStringParams(context, "tasklist") //todo 增加回调校验的参数
+	fmt.Println(tasklist)
 	if err != nil {
 		data := map[string]interface{}{"status": 403, "msg": err.Error()}
 		context.JSON(http.StatusOK, data)
 		return
 	}
-	if taskLength == 0 {
+	if len(*tasklist) == 0 {
 		context.JSON(http.StatusOK, map[string]interface{}{"status": 404, "msg": "none"})
 		return
 	}
-	if !task.TaskDel(taskLength) {
+	if !task.TaskDel(tasklist) {
 		context.JSON(http.StatusOK, map[string]interface{}{"status": 500, "msg": "length is incorrect"})
 		return
 	}

@@ -20,6 +20,12 @@ func (this *Base) GetStringParam(c *gin.Context, key string) (string, error) {
 	return "", errors.New("this key doesn't exist")
 }
 
+func (this *Base) GetStringParams(c *gin.Context, key string) (*[]string, error) {
+	key += "[]"
+	s := c.PostFormArray(key)
+	return &s, nil
+}
+
 func (this *Base) GetIntParam(c *gin.Context, key string) (value int, err error) {
 	s, b := c.GetQuery(key)
 	if !b {
