@@ -9,7 +9,6 @@ import (
 	"time"
 	"encoding/hex"
 	"strconv"
-	"fmt"
 )
 
 type Receiver struct {
@@ -35,7 +34,6 @@ func (this Receiver) Receive(context *gin.Context) {
 		TaskDetail: TaskDetail,
 		TaskId:     taskId,
 	}
-	//todo flush to disk
 	err = task.TaskAdd(&t)
 	if err != nil {
 		context.JSON(http.StatusOK, map[string]interface{}{"status": 500, "msg": err.Error()})
@@ -47,7 +45,6 @@ func (this Receiver) Receive(context *gin.Context) {
 //todo dependent disk data
 func (this Receiver) Confirm(context *gin.Context) {
 	tasklist, err := this.GetStringParams(context, "tasklist") //todo 增加回调校验的参数
-	fmt.Println(tasklist)
 	if err != nil {
 		data := map[string]interface{}{"status": 403, "msg": err.Error()}
 		context.JSON(http.StatusOK, data)
