@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"raspberry-server/conf"
-	"fmt"
 )
 
 func Auth() gin.HandlerFunc {
