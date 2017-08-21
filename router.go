@@ -14,7 +14,7 @@ func RegisterRouters() {
 		context.JSON(http.StatusOK, data)
 	})
 
-	router.POST("receive", receiver.Receiver{}.Receive)
-	router.GET("tasklist", pull.Pull{}.TaskList)
-	router.POST("confirm", receiver.Receiver{}.Confirm)
+	auth.POST("receive", receiver.Receiver{}.Receive)
+	auth.GET("tasklist", pull.Pull{}.TaskList)
+	auth.POST("confirm", receiver.Receiver{}.Confirm)
 }
