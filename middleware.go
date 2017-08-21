@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"raspberry-server/conf"
+	"fmt"
 )
 
 func Auth() gin.HandlerFunc {
@@ -14,10 +15,12 @@ func Auth() gin.HandlerFunc {
 		} else {
 			c.JSON(http.StatusOK, map[string]interface{}{"status": 401, "msg": "auth failed"})
 			c.Abort()
+			return
 		}
 		if token[0] != conf.Conf.Token {
 			c.JSON(http.StatusOK, map[string]interface{}{"status": 401, "msg": "auth failed"})
 			c.Abort()
+			return
 		}
 		c.Next()
 
