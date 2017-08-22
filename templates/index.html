@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>raspberry server</title>
+</head>
+<body>
+<form action="/receive" method="post" enctype="application/x-www-form-urlencoded">
+    任务名称:<input type="text" name="name"><br/>
+    任务详情:<input type="text" name="detail"><br/>
+    任务类型:<select name="type">
+    <option value="torrent">torrent or link</option>
+</select><br/>
+    token:<input type="text" name="token"><br/>
+    <button type="button" onclick=call()>提交</button>
+</form>
+<script>
+    function call() {
+        var xhr = new XMLHttpRequest();
+        var token = document.getElementsByTagName("input").token.value;
+        var name = document.getElementsByTagName("input").name.value;
+        var detail = document.getElementsByTagName("input").detail.value;
+        var type = document.getElementsByTagName("select").type.value;
+        xhr.open("POST", "/receive", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.setRequestHeader("Token", token);
+        xhr.send("name=" + name +
+            "&detail=" + detail +
+            "&type=" + type);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                alert(xhr.responseText);
+            }
+        }
+    }
+
+</script>
+</body>
+</html>
